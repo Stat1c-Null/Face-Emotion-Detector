@@ -10,7 +10,7 @@ camVideo = cv2.VideoCapture(0)
 squareColor = (180, 40, 160)
 
 while True:
-  _, img = camVideo.read()
+  _, img = camVideo.read() 
   grayFilter = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) #Put gray filter over video
   #Detect faces 
   faces = face_detect_model.detectMultiScale(grayFilter, 1.1, 5)
@@ -18,6 +18,13 @@ while True:
   for (x, y, w, h) in faces:
     cv2.rectangle(img, (x, y), (x+w, y+h), squareColor, 2)
   cv2.imshow('img', img)
+
+  #Detect user's emotion
+  try:
+    result = DeepFace.analyze(img, actions=['emotion'])
+    print(result[0]["dominant_emotion"])
+  except Exception as e:
+    print("Error happened: ", e)
 
   #Press ESCAPE to close everything
   k = cv2.waitKey(30) & 0xff
